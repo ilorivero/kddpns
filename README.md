@@ -49,9 +49,7 @@ pns2019.csv (Microdados Brutos) ──► Deve estar na pasta raiz deste código
 - Análise bivariada rigorosa:
   - Teste t de Student (Welch) e Teste U de Mann-Whitney para atributos contínuos.
   - Teste Qui-Quadrado de Independência ($\chi^2$) e V de Cramér para atributos categóricos:
-    $$
-    \chi^2 = \sum_{i=1}^r \sum_{j=1}^c \frac{(O_{ij} - E_{ij})^2}{E_{ij}}
-    $$
+    $\chi^2 = \sum_{i=1}^r \sum_{j=1}^c \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
 - Gráficos gerados (300 DPI):
   - `etapa1_fig1_imc_antropometria_ecdf.png`: Densidade (KDE) e Curva de Frequência Acumulada Empírica (ECDF) com marcação de pontos de inflexão de aceleração do risco antropométrico.
   - `etapa1_fig2_boxplots_antropometria.png`: Boxplots pareados de IMC, peso, cintura e idade de início do tabagismo.
@@ -61,10 +59,7 @@ pns2019.csv (Microdados Brutos) ──► Deve estar na pasta raiz deste código
 
 ### Etapa 2: `02_tratamento_outliers.py`
 - Discussão ético-epidemiológica: evita o descarte de registros (*listwise deletion*), que geraria grave viés de seleção ao excluir pacientes mais graves da amostra.
-- Aplicação de limites estatísticos de Tukey por $\text{IQR}$:
-  $$
-  [Q_1 - 1{,}5 \times \text{IQR}, \quad Q_3 + 1{,}5 \times \text{IQR}]
-  $$
+- Aplicação de limites estatísticos de Tukey por $\text{IQR}$: $[Q_1 - 1{,}5 \times \text{IQR}, \; Q_3 + 1{,}5 \times \text{IQR}]$
 - Cruzamento com barreiras de sanidade biológica/fisiológica da OMS/SBC (Peso: $[30, 220]\text{ kg}$; Altura: $[120, 220]\text{ cm}$; Cintura: $[40, 180]\text{ cm}$; Quadril: $[50, 220]\text{ cm}$).
 - **Winsorização (*Capping*)**: Truncamento de valores que excedem os limites, preservando 100% dos 90.846 registros na coorte.
 - Gráficos gerados (300 DPI):
@@ -75,10 +70,7 @@ pns2019.csv (Microdados Brutos) ──► Deve estar na pasta raiz deste código
 ---
 
 ### Etapa 3: `03_tratamento_dados_ausentes.py`
-- Fundamentação teórica dos mecanismos de Rubin (1976): MCAR, MAR e NMAR:
-  $$
-  P(M \mid Y_{\text{obs}}, Y_{\text{mis}})
-  $$
+- Fundamentação teórica dos mecanismos de Rubin (1976): MCAR, MAR e NMAR: $P(M \mid Y_{\text{obs}}, Y_{\text{mis}})$
 - **Passo 1 (Lógica de Pulos Estruturais - *Skip Patterns*)**: Atribuição determinística do valor `0` a indivíduos não expostos (não-fumantes `P050=3` têm perguntas de cigarros zeradas; abstêmios `P027=3` têm consumo de álcool zerado; indivíduos sem esforço físico têm dias zerados).
 - **Passo 2 (Imputação por Tendência Central Estratificada por Classe)**:
   - Variáveis contínuas/discretas: Mediana da subpopulação específica (Cardiopata `Q06306=1` vs. Saudável `Q06306=2`).
@@ -93,30 +85,12 @@ pns2019.csv (Microdados Brutos) ──► Deve estar na pasta raiz deste código
 
 ### Etapa 4: `04_analise_entropia.py`
 - Fundamentação na Teoria da Informação de Claude Shannon (1948):
-  - **Entropia Marginal de Shannon:**
-    $$
-    H(X) = -\sum_{i=1}^k P(x_i) \log_2 P(x_i)
-    $$
-  - **Entropia Máxima Teórica:**
-    $$
-    H_{\max}(X) = \log_2(k)
-    $$
-  - **Entropia Normalizada:**
-    $$
-    H_{\text{norm}}(X) = \frac{H(X)}{\log_2(k)} \in [0, 1]
-    $$
-  - **Entropia Condicional:**
-    $$
-    H(Y \mid X) = \sum_{x \in X} P(x) H(Y \mid X = x) = -\sum_{x \in X} \sum_{y \in Y} P(x, y) \log_2 P(y \mid x)
-    $$
-  - **Ganho de Informação / Informação Mútua:**
-    $$
-    IG(Y, X) = I(Y; X) = H(Y) - H(Y \mid X)
-    $$
-  - **Razão de Ganho de Informação (*Gain Ratio*):**
-    $$
-    GR(Y, X) = \frac{IG(Y, X)}{H(X)}
-    $$
+  - **Entropia Marginal de Shannon:** $H(X) = -\sum_{i=1}^k P(x_i) \log_2 P(x_i)$
+  - **Entropia Máxima Teórica:** $H_{\max}(X) = \log_2(k)$
+  - **Entropia Normalizada:** $H_{\text{norm}}(X) = \frac{H(X)}{\log_2(k)} \in [0, 1]$
+  - **Entropia Condicional:** $H(Y \mid X) = \sum_{x \in X} P(x) H(Y \mid X = x) = -\sum_{x \in X} \sum_{y \in Y} P(x, y) \log_2 P(y \mid x)$
+  - **Ganho de Informação / Informação Mútua:** $IG(Y, X) = I(Y; X) = H(Y) - H(Y \mid X)$
+  - **Razão de Ganho de Informação (*Gain Ratio*):** $GR(Y, X) = \frac{IG(Y, X)}{H(X)}$
 - Discretização de variáveis contínuas em decis ($k = 10$ quantis de frequência).
 - Ranqueamento integral das 44 variáveis de acordo com o Ganho de Informação em relação ao diagnóstico cardíaco.
 - Gráficos gerados (300 DPI):
