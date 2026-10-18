@@ -22,7 +22,9 @@ from report_styler import (
 )
 
 # Caminhos padrão
-INPUT_CSV = r"pns2019.csv"
+LOCAL_CSV = r"pns2019.csv"
+ONEDRIVE_CSV = r"C:\Users\ilori\OneDrive\Ensino\Doutorado\Disciplinas\KDD\Trabalho de KDD\analise2\pns2019.csv"
+INPUT_CSV = LOCAL_CSV if os.path.exists(LOCAL_CSV) else ONEDRIVE_CSV
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, "pns_etapa1_descritiva.csv")
 OUTPUT_DOCX = os.path.join(OUTPUT_DIR, "relatorio_etapa1.docx")
